@@ -1,12 +1,12 @@
-import { GlobalStyle } from './styles/GlobalStyle'
+import Controls from './components/Controls';
 
-import { Greetings } from './components/Greetings'
+import './styles/main.scss';
+
 
 export function App() {
   return (
     <>
-      <GlobalStyle />
-      <Greetings />
+      <Controls />
     </>
   )
 }
