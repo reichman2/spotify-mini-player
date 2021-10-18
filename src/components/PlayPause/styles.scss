@@ -1,0 +1,27 @@
+.play-pause-button {
+    background-color: white;
+    
+    text-align: center;
+    
+    display: block;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+
+    .play-icon, .pause-icon {
+        font-size: 17px;
+        color: #191622;
+        margin: auto;
+    }
+    
+    .pause-icon {
+        transform: scaleX(90%);
+    }
+
+    &:hover {
+        transform: scale(120%, 120%);
+    }
+}
