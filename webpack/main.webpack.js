@@ -1,6 +1,6 @@
 module.exports = {
   resolve: {
-    extensions: ['.ts', '.js']
+    extensions: ['.ts', '.js', '.scss', '.sass']
   },
   entry: './electron/main.ts',
   module: {
