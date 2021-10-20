@@ -1,4 +1,5 @@
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow, ipcMain } from 'electron';
+import { authorize } from './authorization/authorize';
 
 let mainWindow: BrowserWindow | null
 
@@ -16,6 +17,8 @@ function createWindow () {
     width: 1100,
     height: 700,
     backgroundColor: '#191622',
+    // frame: false,
+    // alwaysOnTop: true,
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
@@ -36,7 +39,21 @@ async function registerListeners () {
    */
   ipcMain.on('message', (_, message) => {
     console.log(message)
-  })
+  });
+
+  /**
+   * For completing Spotify oauth.
+   */
+  ipcMain.on('request-authorization', (_) => {
+    authorize();
+  });
+
+  /**
+   * For refreshing spotify credentials with the refresh-token.
+   */
+  ipcMain.on('request-authorization-refresh', (_) => {
+
+  });
 }
 
 app.on('ready', createWindow)
@@ -55,3 +72,5 @@ app.on('activate', () => {
     createWindow()
   }
 })
+
+
