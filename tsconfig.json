@@ -8,6 +8,8 @@
       "es2016",
       "es2017"
     ],
+    "types": ["@types/spotify-api"],
+    "typeRoots": ["node_modules/@types"],
     "allowJs": true,
     "jsx": "react-jsx",
     "sourceMap": true,
@@ -15,6 +17,6 @@
     "strict": true ,
     "esModuleInterop": true,
     "noUnusedLocals": false,
-    "noUnusedParameters": false
+    "noUnusedParameters": false,
   }
 }
