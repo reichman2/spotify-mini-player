@@ -7,10 +7,10 @@ import './styles.scss';
 
 
 export interface PlayPauseState {
-    playback: "play"|"pause";
+    playback: "play" | "pause";
 }
 
-export interface PlayPauseProps extends PlayPauseState { }
+export type PlayPauseProps = PlayPauseState;
 
 
 class PlayPause extends React.Component<PlayPauseProps, PlayPauseState> {
@@ -23,6 +23,7 @@ class PlayPause extends React.Component<PlayPauseProps, PlayPauseState> {
 
     handleClick() {
         this.setState({ playback: (this.state.playback === "play")? "pause" : "play" }); // toggle play and pause state on click
+        window.Main.spotifyApi[this.state.playback]();
     }
 
     render() {
