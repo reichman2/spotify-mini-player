@@ -66,7 +66,6 @@ export const api = {
 }
 
 const spotifyRequest = async (action: string, ...args: any[]) => {
-  console.log('dingus at bridge');
   return await ipcRenderer.invoke('spotify', action, args);
 }
 

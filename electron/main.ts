@@ -17,8 +17,6 @@ declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
 function createWindow () {
   const envPath = path.join(process.cwd(), ".env");
-  console.log("envPath: ", envPath);
-  console.log("loadEnv(): " + JSON.stringify(loadEnv(envPath)));
   
   mainWindow = new BrowserWindow({
     // icon: path.join(assetsPath, 'assets', 'icon.png'),
@@ -54,9 +52,7 @@ async function registerListeners () {
    * For completing Spotify oauth.
    */
   ipcMain.handle('request-authorization', async (event, arg) => {
-    console.log('beginning auth process');
     let res = await beginAuthorization();
-    console.log(`auth process resolved as ${res}. complete, returning...`);
     return "stinky";
   });
 
