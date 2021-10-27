@@ -1,10 +1,14 @@
-import { app, BrowserWindow, ipcMain } from 'electron';
-import { authorize } from './authorization/authorize';
+import { app, BrowserWindow, ipcMain, ipcRenderer } from 'electron';
+import { beginAuthorization, spotifyApi } from './authorization/authorize';
+import { loadEnv } from './store/environment';
+import path from 'path'
+import { apiRequest } from './authorization/spotify-bridge-handler';
 
-let mainWindow: BrowserWindow | null
 
-declare const MAIN_WINDOW_WEBPACK_ENTRY: string
-declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string
+let mainWindow: BrowserWindow | null;
+
+declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
+declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
 // const assetsPath =
 //   process.env.NODE_ENV === 'production'
@@ -12,6 +16,10 @@ declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string
 //     : app.getAppPath()
 
 function createWindow () {
+  const envPath = path.join(process.cwd(), ".env");
+  console.log("envPath: ", envPath);
+  console.log("loadEnv(): " + JSON.stringify(loadEnv(envPath)));
+  
   mainWindow = new BrowserWindow({
     // icon: path.join(assetsPath, 'assets', 'icon.png'),
     width: 1100,
@@ -22,6 +30,7 @@ function createWindow () {
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
+      // enableRemoteModule: ,
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY
     }
   })
@@ -44,16 +53,33 @@ async function registerListeners () {
   /**
    * For completing Spotify oauth.
    */
-  ipcMain.on('request-authorization', (_) => {
-    authorize();
+  ipcMain.handle('request-authorization', async (event, arg) => {
+    console.log('beginning auth process');
+    let res = await beginAuthorization();
+    console.log(`auth process resolved as ${res}. complete, returning...`);
+    return "stinky";
   });
 
   /**
    * For refreshing spotify credentials with the refresh-token.
    */
   ipcMain.on('request-authorization-refresh', (_) => {
-
+    
   });
+
+  // --------- SPOTIFY API BRIDGE ---------
+  ipcMain.handle("spotify", async (event, action: string, ...args: any[]) => {
+    return await apiRequest(action, ...args);
+  });
+
+  
+
+  // --------- DEBUG ----------
+  ipcMain.on('log-current-track', async (_) => {
+    console.log((await spotifyApi.getMyCurrentPlayingTrack()).body.item!.name);
+  });
+
+  
 }
 
 app.on('ready', createWindow)
@@ -68,6 +94,8 @@ app.on('window-all-closed', () => {
 })
 
 app.on('activate', () => {
+  // dotenv.config()
+
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow()
   }
